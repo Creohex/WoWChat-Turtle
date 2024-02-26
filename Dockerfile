@@ -5,8 +5,9 @@ RUN mvn dependency:resolve
 
 FROM maven:3.8.6-jdk-8 as builder
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
 COPY --from=dependencies /root/.m2 /root/.m2
-COPY . /app
 RUN mvn clean package
 
 FROM openjdk:8-jre
