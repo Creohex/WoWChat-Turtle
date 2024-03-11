@@ -8,12 +8,11 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 COPY --from=dependencies /root/.m2 /root/.m2
-RUN mvn clean package
+RUN mvn clean package -DfinalName=wowchat
 
 FROM openjdk:8-jre
 WORKDIR /app
 COPY ./wowchat_custom.conf /app
-COPY --from=builder /app/target/wowchat-1.3.8-t1.17.1-2.zip /app
-RUN unzip wowchat-1.3.8-t1.17.1-2.zip
+COPY --from=builder /app/target/wowchat.jar /app
 
-ENTRYPOINT ["java", "-jar", "wowchat/wowchat.jar", "wowchat_custom.conf"]
+ENTRYPOINT ["java", "-jar", "wowchat.jar", "wowchat_custom.conf"]
