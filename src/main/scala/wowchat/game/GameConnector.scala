@@ -47,37 +47,13 @@ class GameConnector(host: String,
 
         @throws[Exception]
         override protected def initChannel(socketChannel: SocketChannel): Unit = {
-          val encoder = WowChatConfig.getExpansion match {
-            case WowExpansion.Cataclysm => new GamePacketEncoderCataclysm
-            case WowExpansion.MoP => new GamePacketEncoderMoP
-            case _ => new GamePacketEncoder
-          }
+          // Always use classic/vanilla packet handlers regardless of server's reported realm_build
+          val encoder = new GamePacketEncoder
+          val decoder = new GamePacketDecoder
 
-          val decoder = WowChatConfig.getExpansion match {
-            case WowExpansion.WotLK => new GamePacketDecoderWotLK
-            case WowExpansion.Cataclysm => new GamePacketDecoderCataclysm
-            case WowExpansion.MoP => new GamePacketDecoderMoP
-            case _ => new GamePacketDecoder
-          }
-
+          socketChannel.attr(CRYPT).set(new GameHeaderCrypt)
           handler = Some(
-            WowChatConfig.getExpansion match {
-              case WowExpansion.Vanilla =>
-                socketChannel.attr(CRYPT).set(new GameHeaderCrypt)
-                new GamePacketHandler(realmId, realmName, sessionKey, gameEventCallback)
-              case WowExpansion.TBC =>
-                socketChannel.attr(CRYPT).set(new GameHeaderCryptTBC)
-                new GamePacketHandlerTBC(realmId, realmName, sessionKey, gameEventCallback)
-              case WowExpansion.WotLK =>
-                socketChannel.attr(CRYPT).set(new GameHeaderCryptWotLK)
-                new GamePacketHandlerWotLK(realmId, realmName, sessionKey, gameEventCallback)
-              case WowExpansion.Cataclysm =>
-                socketChannel.attr(CRYPT).set(new GameHeaderCryptWotLK)
-                new GamePacketHandlerCataclysm15595(realmId, realmName, sessionKey, gameEventCallback)
-              case WowExpansion.MoP =>
-                socketChannel.attr(CRYPT).set(new GameHeaderCryptMoP)
-                new GamePacketHandlerMoP18414(realmId, realmName, sessionKey, gameEventCallback)
-            }
+            new GamePacketHandler(realmId, realmName, sessionKey, gameEventCallback)
           )
 
           socketChannel.pipeline.addLast(
