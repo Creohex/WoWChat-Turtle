@@ -25,8 +25,8 @@ object MessageResolver {
 
 class MessageResolver(jda: JDA) {
 
-  protected val linkSite = "[%2$s](http://database.turtle-wow.org/?%3$s=%1$s)"
-  protected val linkArmory = "[%1$s](" + WowChatConfig.armoryURL + "%2$s)"
+  protected val linkSite = "[%2$s](http://database.turtlecraft.gg/?%3$s=%1$s)"
+  protected val linkArmory = "[%1$s](<" + WowChatConfig.armoryURL + "%2$s>)"
 
   protected val objectLinks = Seq(
     "item" -> linkSite,

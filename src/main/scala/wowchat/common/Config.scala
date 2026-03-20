@@ -105,7 +105,7 @@ object WowChatConfig extends GamePackets {
 
   lazy val getRealmBuild: Int = Global.config.wow.realmBuild.getOrElse(buildFromVersion)
   lazy val getGameBuild: Int = Global.config.wow.gameBuild.getOrElse(buildFromVersion)
-  lazy val armoryURL: String = s"https://turtle-wow.org/armory/${Global.config.wow.realm}/"
+  lazy val armoryURL: String = s"https://turtlecraft.gg/armory/${Global.config.wow.realm}/"
 
   private def convertToUpper(account: String): Array[Byte] = {
     account.map(c => {
