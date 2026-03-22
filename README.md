@@ -46,7 +46,7 @@ Even though this bot does not do anything malicious, some servers may not like a
    * Uncheck Public Bot option
    * **Check PRESENCE INTENT and SERVER MEMBERS INTENT under "Privileged Gateway Intents"** This is important! Without it, your bot will not work!
    * Under token click Copy. This is the value WoW Chat will use to login to Discord.
-2. Configure WoW Chat by opening `wowchat.conf` in a text editor.
+2. Configure WoW Chat by opening `config/wowchat.conf` in a text editor.
    * You can also create your own file, using the supplied `wowchat.conf` as a template.
    * In section **discord**:
      * **token**: Paste the above copied Bot token, or set the DISCORD_TOKEN environment variable.
@@ -106,23 +106,23 @@ Even though this bot does not do anything malicious, some servers may not like a
 ## Run
 1. WoW Chat is written in Scala and compiles to a Java executable using [maven](https://maven.apache.org).
 2. It uses Java JDK 1.8 and Scala 2.12.12.
-3. Run `mvn clean package` which will produce a file in the target folder called `wowchat-<current_version>.zip`
-4. unzip `wowchat-<current_version>.zip`, edit the configuration file and run `java -jar wowchat.jar <config file>`
-   * If no config file is supplied, the bot will try to use `wowchat.conf`
+3. Run `mvn clean package` which will produce `target/wowchat.jar` and `wowchat-<current_version>.zip` (jar plus `run.sh` / `run.bat`; config is not bundled — it lives in `config/` in this repository).
+4. **From a checkout:** run `java -jar target/wowchat.jar config/wowchat.conf` (and use `config/logback.xml` via `-Dlogback.configurationFile=...` as in `run.sh`). **From the zip alone:** copy `config/logback.xml` and `config/wowchat.conf` from the repo into the same directory as `wowchat.jar`, edit `wowchat.conf`, then run `java -jar wowchat.jar wowchat.conf` or use the included scripts.
+   * If no config file is supplied, the bot will try to use `wowchat.conf` in the current working directory.
 
 ## Run as container
 Docker support has been added for an alternative and simple way to deploy WoW Chat:
 
 1. Populate `.env` file with required information:
 
-  (or skip this step and configure these specific fields manually in `./src/main/resources/wowchat.conf`):
+  (or skip this step and configure these specific fields manually in `./config/wowchat.conf`):
 ```bash
 DISCORD_TOKEN=...
 WOW_ACCOUNT=...
 WOW_PASSWORD=...
 WOW_CHARACTER=...
 ```
-2. Configure `./src/main/resources/wowchat.conf` as needed.
+2. Configure `./config/wowchat.conf` as needed.
 3. Build container:
 ```bash
 docker-compose build
